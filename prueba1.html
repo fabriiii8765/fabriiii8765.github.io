@@ -4,20 +4,23 @@
   <meta charset="UTF-8">
   <title>Te Amo</title>
   <style>
-    body {
+    html, body {
       margin: 0;
+      padding: 0;
       background-color: black;
       overflow: hidden;
-      position: relative;
-      height: 100vh;
+      height: 100%;
+      width: 100%;
     }
 
     .center-image {
       position: absolute;
       top: 50%;
       left: 50%;
-      width: 200px;
-      height: 200px;
+      width: 30vw;
+      height: 30vw;
+      max-width: 200px;
+      max-height: 200px;
       transform: translate(-50%, -50%);
       border-radius: 20px;
       box-shadow: 0 0 20px pink;
@@ -27,8 +30,10 @@
 
     .circle-photo {
       position: absolute;
-      width: 100px;
-      height: 100px;
+      width: 15vw;
+      height: 15vw;
+      max-width: 100px;
+      max-height: 100px;
       object-fit: cover;
       border-radius: 15px;
       box-shadow: 0 0 10px pink;
@@ -39,7 +44,7 @@
     .te-amo {
       position: absolute;
       color: pink;
-      font-size: 24px;
+      font-size: 20px;
       animation: fall linear infinite;
       white-space: nowrap;
       pointer-events: none;
@@ -58,34 +63,40 @@
 
   <!-- JavaScript para colocar 16 imágenes en 2 círculos -->
   <script>
-    const centerX = window.innerWidth / 2;
-    const centerY = window.innerHeight / 2;
+    function colocarFotos() {
+      const existing = document.querySelectorAll('.circle-photo');
+      existing.forEach(e => e.remove());
 
-    const fotos = [
-      "foto1.jpg", "foto2.jpg", "foto3.jpg", "foto4.jpg",
-      "foto5.jpg", "foto6.jpg", "foto7.jpg", "foto8.jpg", // círculo interno (8)
-      "foto9.jpg", "foto10.jpg", "foto11.jpg", "foto12.jpg",
-      "foto13.jpg", "foto14.jpg", "foto15.jpg", "foto16.jpg" // círculo externo (8)
-    ];
+      const centerX = window.innerWidth / 2;
+      const centerY = window.innerHeight / 2;
+      const fotos = [
+        "foto1.jpg", "foto2.jpg", "foto3.jpg", "foto4.jpg",
+        "foto5.jpg", "foto6.jpg", "foto7.jpg", "foto8.jpg",
+        "foto9.jpg", "foto10.jpg", "foto11.jpg", "foto12.jpg",
+        "foto13.jpg", "foto14.jpg", "foto15.jpg", "foto16.jpg"
+      ];
 
-    fotos.forEach((src, index) => {
-      const img = document.createElement("img");
-      img.src = src;
-      img.className = "circle-photo";
+      fotos.forEach((src, index) => {
+        const img = document.createElement("img");
+        img.src = src;
+        img.className = "circle-photo";
 
-      const isInner = index < 8;
-      const radius = isInner ? 180 : 300; // radio de cada círculo
-      const total = 8;
-      const angle = (index % 8) * (360 / total) * (Math.PI / 180);
+        const isInner = index < 8;
+        const radius = isInner ? Math.min(window.innerWidth, window.innerHeight) * 0.25 : Math.min(window.innerWidth, window.innerHeight) * 0.4;
+        const angle = (index % 8) * (360 / 8) * (Math.PI / 180);
 
-      const x = centerX + radius * Math.cos(angle);
-      const y = centerY + radius * Math.sin(angle);
+        const x = centerX + radius * Math.cos(angle);
+        const y = centerY + radius * Math.sin(angle);
 
-      img.style.left = `${x}px`;
-      img.style.top = `${y}px`;
+        img.style.left = `${x}px`;
+        img.style.top = `${y}px`;
 
-      document.body.appendChild(img);
-    });
+        document.body.appendChild(img);
+      });
+    }
+
+    window.addEventListener('load', colocarFotos);
+    window.addEventListener('resize', colocarFotos);
 
     // Lluvia de "Te amo"
     function crearLluvia() {
